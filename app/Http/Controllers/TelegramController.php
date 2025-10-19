@@ -70,6 +70,7 @@ class TelegramController extends Controller
         $chatId = $callbackQuery->getMessage()->getChat()->getId();
         $data = $callbackQuery->getData();
 
+
         // Обработка нажатий на кнопки
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
