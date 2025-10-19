@@ -26,12 +26,10 @@ class TelegramController extends Controller
     {
         $update = $this->telegram->getWebhookUpdate();
 
-        // Обработка сообщений
         if ($update->has('message')) {
             $this->handleMessage($update->getMessage());
         }
 
-        // Обработка callback query (кнопки)
         if ($update->has('callback_query')) {
             $this->handleCallbackQuery($update->callbackQuery);
         }
@@ -53,6 +51,9 @@ class TelegramController extends Controller
         }
     }
 
+    /**
+     * @throws TelegramSDKException
+     */
     private function sendWelcomeMessage($chatId): void
     {
         $this->telegram->sendMessage([
@@ -80,19 +81,11 @@ class TelegramController extends Controller
 
     public function handleRegularMessage($chatId, $text): void
     {
-        $telegramService = app(TelegramService::class);
-
-        $keyboard = $telegramService->createInlineKeyboard([
-            [
-                ['text' => 'Кнопка 1', 'callback_data' => 'button_1'],
-                ['text' => 'Кнопка 2', 'callback_data' => 'button_2']
-            ]
-        ]);
+        $telegramService = new TelegramService();
 
         $telegramService->sendMessage(
             $chatId,
-            "Вы написали: {$text}",
-            $keyboard
+            "Вы написали: {$text}"
         );
     }
 }
