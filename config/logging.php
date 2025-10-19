@@ -54,7 +54,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'telegram'],
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
@@ -63,28 +63,6 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
-        ],
-
-        'telegram' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/telegram.log'),
-            'level' => 'info',
-            'days' => 14,
-            'permission' => 0664,
-        ],
-
-        'telegram_debug' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/telegram-debug.log'),
-            'level' => 'debug',
-            'days' => 7,
-        ],
-
-        'telegram_errors' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/telegram-errors.log'),
-            'level' => 'error',
-            'days' => 30,
         ],
 
         'daily' => [
@@ -147,6 +125,13 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'telegram' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/telegram.log'),
+            'level' => 'debug',
+            'days' => 14,
         ],
 
     ],

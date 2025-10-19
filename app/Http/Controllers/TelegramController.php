@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Telegram\Sender;
 use Illuminate\Http\JsonResponse;
 use Telegram\Bot\Api;
 
 class TelegramController extends Controller
 {
     protected Api $telegram;
+
     public function __construct()
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
     }
+
     public function webhook(): JsonResponse
     {
         $update = $this->telegram->getWebhookUpdate();
@@ -22,16 +25,20 @@ class TelegramController extends Controller
 
         return response()->json(['status' => 'success']);
     }
+
     private function sendMessage($message): void
     {
-        $chatId = $message->getChat()->getId();
-        $text = $message->getText() ?? 'Добро пожаловать! Я бот на Laravel!';
+        $text = $message->getText();
 
-        $params = [
-            'chat_id' => $chatId,
-            'text' => $text,
-            'parse_mode' => 'HTML'
-        ];
-        $this->telegram->sendMessage($params);
+        $params = [];
+        $params['chat_id'] = $message->getChat()->getId();
+        $params['parse_mode'] = 'HTML';
+
+        $params['text'] = match ($text) {
+            '/start' => 'Добро пожаловать в Flux бот!',
+            default => 'Ваше сообщение ' . $text,
+        };
+
+        Sender::send($this->telegram, $params);
     }
 }
