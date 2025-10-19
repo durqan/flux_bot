@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class SetTelegramWebhook extends Command
 {
@@ -23,6 +24,7 @@ class SetTelegramWebhook extends Command
 
     /**
      * Execute the console command.
+     * @throws TelegramSDKException
      */
     public function handle()
     {
