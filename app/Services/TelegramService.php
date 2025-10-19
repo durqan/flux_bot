@@ -5,6 +5,7 @@ namespace App\Services;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\Keyboard\Keyboard;
+use Telegram\Bot\Objects\Message;
 
 class TelegramService
 {
@@ -18,7 +19,10 @@ class TelegramService
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
     }
 
-    public function sendMessage($chatId, $text)
+    /**
+     * @throws TelegramSDKException
+     */
+    public function sendMessage($chatId, $text): Message
     {
         $params = [
             'chat_id' => $chatId,

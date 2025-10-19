@@ -30,13 +30,12 @@ class TelegramController extends Controller
             $this->handleMessage($update->getMessage());
         }
 
-        if ($update->has('callback_query')) {
-            $this->handleCallbackQuery($update->callbackQuery);
-        }
-
         return response()->json(['status' => 'success']);
     }
 
+    /**
+     * @throws TelegramSDKException
+     */
     private function handleMessage($message): void
     {
         $chatId = $message->getChat()->getId();
@@ -60,22 +59,6 @@ class TelegramController extends Controller
             'chat_id' => $chatId,
             'text' => 'Добро пожаловать! Я бот на Laravel!',
             'parse_mode' => 'HTML'
-        ]);
-    }
-
-    /**
-     * @throws TelegramSDKException
-     */
-    private function handleCallbackQuery($callbackQuery): void
-    {
-        $chatId = $callbackQuery->getMessage()->getChat()->getId();
-        $data = $callbackQuery->getData();
-
-
-        // Обработка нажатий на кнопки
-        $this->telegram->sendMessage([
-            'chat_id' => $chatId,
-            'text' => "Вы нажали: {$data}"
         ]);
     }
 
